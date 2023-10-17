@@ -47,7 +47,7 @@ class QuizGame:
             user_answer = input("Escolha a letra correspondente à resposta correta: ").strip().upper()
 
             if user_answer.isalpha() and user_answer in [chr(65 + i) for i in range(len(options))]:
-                user_answer_index = ord(user_answer) - ord('A')
+                user_answer_index = ord(user_answer) - ord('A') + 1
                 correct_answers = question_data['correct_answer']
                 if user_answer_index in correct_answers:
                     print("Resposta correta!")
