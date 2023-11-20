@@ -1,140 +1,147 @@
-# Importa as classes necessárias do módulo DatabaseManager, QuizManager e QuestionManager
+# 3 QuizManager.py
+
 from DatabaseManager import DatabaseManager
-from QuizManager import QuizManager
-from QuestionManager import QuestionManager
 
-# Define a classe QuizGame
-class QuizGame:
-    # Método de inicialização da classe, recebe instâncias dos gerenciadores de banco de dados, quizzes e perguntas
-    def __init__(self, db_manager, quiz_manager, question_manager):
+class QuizManager:
+    def __init__(self, db_manager):
         self.db_manager = db_manager
-        self.quiz_manager = quiz_manager
-        self.question_manager = question_manager
-        self.player_name = None  # Adiciona um atributo para armazenar o nome do jogador
 
-    # Método para listar todos os quizzes disponíveis no banco de dados
-    def list_quizzes(self):
-        quizzes = self.db_manager.list_quizzes()
-        if quizzes:
-            print("\n--- Quizzes Disponíveis ---")
-            for quiz in quizzes:
-                # Imprime informações sobre cada quiz
-                print(f"ID: {quiz.doc_id}, Nome: {quiz['nome']}, Descrição: {quiz['descricao']}, Quantidade de Perguntas: {quiz['quantidade_de_perguntas']}")
-        else:
-            print("Nenhum quiz encontrado.")
+    def create_quiz(self):
+        existing_question_ids = []  # Armazena IDs de perguntas já incluídas em quizzes
+        nome = input("Nome do Quiz: ")
+        descricao = input("Descrição: ")
+        while True:
+            try:
+                num_perguntas = int(input("Quantidade de Perguntas: "))
+                break  # Se a conversão for bem-sucedida, saia do loop
+            except ValueError:
+                print("Erro: Por favor, digite apenas números.")
 
-    # Método para iniciar o jogo para um quiz específico
-    def play_quiz(self, quiz_id):
+        perguntas = []
+        for _ in range(num_perguntas):
+            pergunta_id = int(input("ID da Pergunta: "))
+            perguntas.append(pergunta_id)
+
+        quiz_data = {
+            'nome': nome,
+            'descricao': descricao,
+            'quantidade_de_perguntas': num_perguntas,
+            'perguntas': perguntas
+        }
+
+        self.db_manager.add_quiz(quiz_data)
+        print("Quiz criado com sucesso!")
+    
+        novo_quiz_id = "a"
+        return novo_quiz_id
+
+    def view_quiz(self, quiz_id):
         if not self.db_manager.quizzes_table.contains(doc_id=quiz_id):
             print("Quiz não encontrado.")
             return
 
         quiz_data = self.db_manager.quizzes_table.get(doc_id=quiz_id)
-        print(f"Jogando o Quiz: {quiz_data['nome']}")
-
-        if not self.player_name:
-            self.player_name = input("Digite seu nome: ")
-
+        print(f"Visualizando o Quiz: {quiz_data['nome']}")
         questions = quiz_data.get('perguntas', [])
 
         if not questions:
             print("Este quiz não tem perguntas associadas.")
+        else:
+            print("--- Perguntas ---")
+            for question_id in questions:
+                question_data = self.db_manager.questions_table.get(doc_id=question_id)
+                if question_data:
+                    print(f"Pergunta ID: {question_id}")
+                    print(f"Título: {question_data.get('title', 'N/A')}")
+                    print(f"Texto: {question_data.get('text', 'N/A')}")
+                    options = question_data.get('options', [])
+                    for i, option in enumerate(options):
+                        print(f"{chr(65 + i)}. {option}")
+                else:
+                    print(f"Pergunta ID {question_id} não encontrada.")
+    
+
+
+    def list_quizzes(self):
+        quizzes = self.db_manager.list_quizzes()
+        if quizzes:
+            print("\n--- Quizzes Disponíveis ---")
+            for quiz in quizzes:
+                print(f"ID: {quiz.doc_id}, Nome: {quiz['nome']}, Descrição: {quiz['descricao']}, Quantidade de Perguntas: {quiz['quantidade_de_perguntas']}")
+                if 'perguntas' in quiz:
+                    print(f"Perguntas: {', '.join(map(str, quiz['perguntas']))}")
+        else:
+            print("Nenhum quiz encontrado.")
+
+    def edit_quiz(self, quiz_id):
+        if not self.db_manager.quizzes_table.contains(doc_id=quiz_id):
+            print("Quiz não encontrado.")
             return
 
-        score = 0
-        total_questions = len(questions)
-        answers_summary = []  # Lista para armazenar respostas e feedbacks
+        quiz_data = self.db_manager.quizzes_table.get(doc_id=quiz_id)
+        print(f"Editando o Quiz: {quiz_data['nome']}")
+        
+        nome = input(f"Novo nome ({quiz_data['nome']}): ")
+        descricao = input(f"Nova descrição ({quiz_data['descricao']}): ")
+        num_perguntas = int(input(f"Nova quantidade de perguntas ({quiz_data['quantidade_de_perguntas']}): "))
 
-        # Itera sobre as perguntas do quiz
-        for question_id in questions:
-            if not self.db_manager.questions_table.contains(doc_id=question_id):
-                print(f"Pergunta ID {question_id} não encontrada.")
-                continue
+        perguntas = []
+        for _ in range(num_perguntas):
+            pergunta_id = int(input("ID da Pergunta: "))
+            perguntas.append(pergunta_id)
 
-            question_data = self.db_manager.questions_table.get(doc_id=question_id)
-            print("\nPergunta:")
-            print(f"Título: {question_data['title']}")
-            print(f"Texto: {question_data['text']}")
-            options = question_data['options']
-            correct_answers = question_data['correct_answer']
+        updated_data = {
+            'nome': nome or quiz_data['nome'],
+            'descricao': descricao or quiz_data['descricao'],
+            'quantidade_de_perguntas': num_perguntas,
+            'perguntas': perguntas
+        }
 
-            # Imprime as opções de resposta para a pergunta
-            for i, option in enumerate(options):
-                print(f"{chr(65 + i)}. {option}")
+        self.db_manager.edit_quiz(quiz_id, updated_data)
+        print(f"Quiz ID {quiz_id} editado com sucesso!")
 
-            user_answer = input("Escolha a letra ou número correspondente à resposta correta: ").strip().upper()
+    def delete_quiz(self, quiz_id):
+        if not self.db_manager.quizzes_table.contains(doc_id=quiz_id):
+            print("Quiz não encontrado.")
+            return
 
-            # Garante que a resposta fornecida seja válida
-            while user_answer not in ['A', 'B', 'C', 'D', 'E', '1', '2', '3', '4', '5']:
-                print("Opção inválida. Por favor, escolha uma das letras ou números disponíveis.")
-                user_answer = input("Escolha a letra ou número correspondente à resposta correta: ").strip().upper()
+        confirm = input(f"Tem certeza que deseja excluir o Quiz ID {quiz_id}? (Sim/Não): ").strip().lower()
+        if confirm in ['sim', 's']:
+            self.db_manager.delete_quiz(quiz_id)
+            print(f"Quiz ID {quiz_id} excluído com sucesso!")
 
-            if user_answer.isnumeric():
-                user_answer_index = int(user_answer)
-                user_answer = chr(64 + user_answer_index)
-
-            user_answer_index = ord(user_answer) - ord('A') + 1
-            is_correct = user_answer_index in correct_answers
-            answers_summary.append({
-                'Título da Questão': question_data['title'],
-                'Resposta Correta': [chr(64 + ans) for ans in correct_answers],
-                'Resposta Fornecida': user_answer,
-            })
-
-            if is_correct:
-                score += 1
-
-        # Imprime o resumo das respostas
-        print(f"\nResumo das Respostas:")
-        for index, answer_summary in enumerate(answers_summary, 1):
-            print(f"Pergunta {index}:")
-            for key, value in answer_summary.items():
-                print(f"{key}: {value}")
-            print()
-
-        # Imprime a pontuação final do jogador
-        print(f"\n{self.player_name}, você respondeu corretamente a {score} de {total_questions} perguntas.")
-
-    # Método para gerenciar perguntas usando o QuestionManager
-    def manage_questions(self):
-        self.question_manager.run()
-
-    # Método para gerenciar quizzes usando o QuizManager
-    def manage_quizzes(self):
-        self.quiz_manager.run()
-
-    # Método principal para executar o jogo
     def run(self):
         while True:
-            # Exibe o menu do jogo
-            print("\n--- Menu do Jogo Quiz ---")
-            print("1. Listar Quizzes Disponíveis")
-            print("2. Jogar um Quiz")
-            print("3. Gerenciar Perguntas")
-            print("4. Gerenciar Quizzes")
-            print("5. Sair")
+            print("\n--- Menu Quiz ---")
+            print("1. Criar Quiz")
+            print("2. Listar Quizzes")
+            print("3. Visualizar Quiz")
+            print("4. Editar Quiz")
+            print("5. Excluir Quiz")
+            print("6. Sair")
             choice = input("Escolha uma opção: ")
 
-            # Executa a ação correspondente à escolha do jogador
             if choice == '1':
-                self.list_quizzes()
+                self.create_quiz()
             elif choice == '2':
-                quiz_id = int(input("Digite o ID do quiz que deseja jogar: "))
-                self.play_quiz(quiz_id)
+                self.list_quizzes()
             elif choice == '3':
-                self.manage_questions()
+                quiz_id = int(input("Digite o ID do quiz que deseja visualizar: "))
+                self.view_quiz(quiz_id)
             elif choice == '4':
-                self.manage_quizzes()
+                quiz_id = int(input("Digite o ID do quiz que deseja editar: "))
+                self.edit_quiz(quiz_id)
             elif choice == '5':
+                quiz_id = int(input("Digite o ID do quiz que deseja excluir: "))
+                self.delete_quiz(quiz_id)
+            elif choice == '6':
                 break
             else:
                 print("Opção inválida. Por favor, escolha uma opção válida.")
 
-# Verifica se o script está sendo executado como o programa principal
+
+
 if __name__ == "__main__":
-    # Cria instâncias dos gerenciadores de banco de dados, quizzes e perguntas, e inicia o jogo
     db_manager = DatabaseManager()
-    quiz_manager = QuizManager(db_manager)
-    question_manager = QuestionManager(db_manager)
-    game = QuizGame(db_manager, quiz_manager, question_manager)
-    game.run()
+    manager = QuizManager(db_manager)
+    manager.run()
