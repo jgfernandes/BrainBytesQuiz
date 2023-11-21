@@ -1,3 +1,5 @@
+# 2 QuestionManager.py
+
 # Importa a classe DatabaseManager do arquivo database_manager.py e a renomeia como 'db'
 from DatabaseManager import DatabaseManager
 
@@ -164,16 +166,16 @@ class QuestionManager:
         feedback_text = input("Feedback por escrito (opcional): ")
 
         question_data = {
-            'title': title,
-            'text': text,
-            'options': options,
-            'correct_answer': correct_answers,
-            'difficulty': difficulty,
-            'category': category,
-            'multiple_answers': multiple_answers,
-            'question_image': question_image,
-            'feedback_image': feedback_image,
-            'feedback_text': feedback_text,
+            'title': title, # Titulo da pergunta
+            'text': text, # Texto da pergunta
+            'options': options, # Respostas possíveis
+            'correct_answer': correct_answers, # Respostas corretas
+            'difficulty': difficulty, # Nível de dificuldade
+            'category': category, # Categoria da pergunta
+            'multiple_answers': multiple_answers, # Aceita múltiplas respostas?
+            'question_image': question_image, # Imagem da Questão
+            'feedback_image': feedback_image, # Imagem do Feedback
+            'feedback_text': feedback_text, # Texto do Feedback
             'active': True  # Certifica-se de que a pergunta seja criada como ativa
         }
 
@@ -240,37 +242,33 @@ class QuestionManager:
             new_data['options'] = new_options
 
             # Solicita se a pergunta permite múltiplas respostas
-            multiple_answers = self.get_yes_no_input("Permite múltiplas respostas? (Sim/Não): ")
-
+            # multiple_answers = self.get_yes_no_input("Permite múltiplas respostas? (Sim/Não): ")
             # Verifica se o campo de resposta correta foi deixado em branco
+            # if not current_question.get('correct_answers') or not any(current_question['correct_answers']):
+            #     correct_answers = self.get_correct_answers(new_data['options'])
+            # else:
+            #     correct_answers = current_question['correct_answers']
+            multiple_answers = self.get_yes_no_input("Permite múltiplas respostas? (Sim/Não): ")
             if not current_question.get('correct_answers') or not any(current_question['correct_answers']):
-                correct_answers = self.get_correct_answers(new_data['options'])
+                correct_answers = self.get_correct_answers(new_data['options'], multiple_answers)
             else:
                 correct_answers = current_question['correct_answers']
-
             # Define a resposta correta
             new_data['correct_answers'] = correct_answers
 
-            # Solicita a edição da dificuldade
-            new_data['difficulty'] = self.get_difficulty() or current_question['difficulty']
+            new_data['difficulty'] = self.get_difficulty() or current_question['difficulty']    # Solicita a edição da dificuldade
 
-            # Solicita a edição da categoria
-            new_data['category'] = input(f"Nova Categoria ({current_question['category']}): ") or current_question['category']
+            new_data['category'] = input(f"Nova Categoria ({current_question['category']}): ") or current_question['category']  # Solicita a edição da categoria
 
-            # Define se a pergunta permite múltiplas respostas
-            new_data['multiple_answers'] = multiple_answers
+            new_data['multiple_answers'] = multiple_answers # Define se a pergunta permite múltiplas respostas
 
-            # Solicita a edição da URL da imagem da pergunta
-            new_data['question_image'] = input(f"Nova URL da Imagem da Pergunta ({current_question['question_image']}): ") or current_question['question_image']
+            new_data['question_image'] = input(f"Nova URL da Imagem da Pergunta ({current_question['question_image']}): ") or current_question['question_image']    # Solicita a edição da URL da imagem da pergunta
 
-            # Solicita a edição da URL da imagem do feedback
-            new_data['feedback_image'] = input(f"Nova URL da Imagem do Feedback ({current_question['feedback_image']}): ") or current_question['feedback_image']
+            new_data['feedback_image'] = input(f"Nova URL da Imagem do Feedback ({current_question['feedback_image']}): ") or current_question['feedback_image']    # Solicita a edição da URL da imagem do feedback
 
-            # Solicita a edição do texto do feedback
-            new_data['feedback_text'] = input(f"Insira o novo texto do Feedback ({current_question['feedback_text']}): ") or current_question['feedback_text']
+            new_data['feedback_text'] = input(f"Insira o novo texto do Feedback ({current_question['feedback_text']}): ") or current_question['feedback_text']  # Solicita a edição do texto do feedback
 
-            # Atualiza a pergunta no banco de dados
-            self.db_manager.questions_table.update(new_data, doc_ids=[question_id])
+            self.db_manager.questions_table.update(new_data, doc_ids=[question_id]) # Atualiza a pergunta no banco de dados
             print("Pergunta atualizada com sucesso!")
         else:
             print("ID de pergunta não encontrado no banco de dados.")
