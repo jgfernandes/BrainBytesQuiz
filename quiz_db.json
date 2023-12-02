@@ -1,0 +1,139 @@
+{
+  "questions_db": {
+    "1": {
+      "title": "Função do IF",
+      "text": "Qual é a função da palavra-chave \"if\" em Python?",
+      "options": [
+        "Looping",
+        "Condição",
+        "Função",
+        "Variável"
+      ],
+      "correct_answer": [
+        2
+      ],
+      "difficulty": 1,
+      "category": "Python",
+      "multiple_answers": false,
+      "question_image": "",
+      "feedback_image": "",
+      "feedback_text": "O if significa \"se\" e é como usamos os operadores lógicos de uma linguagem. Ele condiciona um comando a uma condição qualquer, executando-o apenas se ela for verdadeira. Sua gramática é \"if(condição){ faça isso }\". Ou seja, chamamos o if, abrimos parênteses e dentro deles inserimos uma condição qualquer.",
+      "active": true
+    },
+    "2": {
+      "title": "Definição de algoritmo",
+      "text": "O que é um algoritmo?",
+      "options": [
+        "Uma linguagem de programação",
+        "Um conjunto de instruções para resolver um problema",
+        "Uma variável",
+        "Um tipo de dado"
+      ],
+      "correct_answer": [
+        2
+      ],
+      "difficulty": 1,
+      "category": "Programação Geral",
+      "multiple_answers": false,
+      "question_image": "",
+      "feedback_image": "",
+      "feedback_text": "Quando a necessidade é desenvolver um programa ou rotina a ser executada pelo computador, precisamos deixar bem claro a sequência que deve ser seguida para atingir o resultado esperado. A esse encadeamento lógico na programação, chamamos de Lógica de Programação, e a descrição de como fazer, definimos como Algoritmos.",
+      "active": true
+    },
+    "3": {
+      "title": "Definição de algoritmo de ordenação",
+      "text": "O que é um algoritmo de ordenação?",
+      "options": [
+        "Um método para organizar dados em ordem alfabética",
+        "Uma estrutura de controle de fluxo",
+        "Um conjunto de instruções para resolver um problema",
+        "Um método para organizar dados em uma sequência específica"
+      ],
+      "correct_answer": [
+        4
+      ],
+      "difficulty": 2,
+      "category": "Programação Geral",
+      "multiple_answers": false,
+      "question_image": "",
+      "feedback_image": "",
+      "feedback_text": "Algoritmo de ordenação é um conjunto de regras para organizar elementos em uma sequência específica. Métodos como Bubble Sort ou Quick Sort rearranjam dados, otimizando eficiência e desempenho, essenciais na manipulação de listas, arrays e outras estruturas de dados na ciência da computação. Cada algoritmo possui características distintas, como a técnica de divisão e conquista no Merge Sort ou a utilização de uma estrutura de dados heap no Heap Sort, permitindo escolhas adaptáveis conforme os requisitos do problema e a escala dos dados a serem ordenados.",
+      "active": true
+    },
+    "4": {
+      "title": "Paradigma orientação objetos",
+      "text": "O que é o paradigma de programação orientada a objetos?",
+      "options": [
+        "Um tipo de dado",
+        "Uma linguagem de programação",
+        "Um conjunto de instruções para resolver um problema",
+        "Um estilo de programação que organiza o código em objetos"
+      ],
+      "correct_answer": [
+        4
+      ],
+      "difficulty": 2,
+      "category": "Programação Geral",
+      "multiple_answers": false,
+      "question_image": "",
+      "feedback_image": "",
+      "feedback_text": "Um sistema construído usando um método orientado a objetos é aquele cujos componentes são partes encapsuladas de dados e funções, que podem herdar atributos e comportamento de outros componentes da mesma natureza, e cujos componentes comunicam-se entre si por meio de mensagens.",
+      "active": true
+    },
+    "5": {
+      "title": "Otimização de código",
+      "text": "O que é otimização de código",
+      "options": [
+        "Um método para reduzir o tamanho do código",
+        "Um estilo de programação",
+        "A melhoria do desempenho e eficiência do código",
+        "Uma técnica para organizar dados"
+      ],
+      "correct_answer": [
+        3
+      ],
+      "difficulty": 3,
+      "category": "Programação Geral",
+      "multiple_answers": false,
+      "question_image": "",
+      "feedback_image": "",
+      "feedback_text": "",
+      "active": true
+    },
+    "6": {
+      "title": "Heap Sort",
+      "text": "O que é heap sort?",
+      "options": [
+        "Um método para organizar dados em uma árvore",
+        "Um método de ordenação baseado em comparação",
+        "Uma linguagem de programação",
+        "Um tipo de dado"
+      ],
+      "correct_answer": [
+        2
+      ],
+      "difficulty": 3,
+      "category": "Programação Geral",
+      "multiple_answers": false,
+      "question_image": "",
+      "feedback_image": "",
+      "feedback_text": "O heapsort utiliza uma estrutura de dados chamada heap binário para ordenar os elementos a medida que os insere na estrutura. Assim, ao final das inserções, os elementos podem ser sucessivamente removidos da raiz da heap, na ordem desejada. Um heap binário é uma árvore binária mantida na forma de um vetor.",
+      "active": true
+    }
+  },
+  "quizzes": {
+    "1": {
+      "nome": "Quiz para entrevistas Cesar",
+      "descricao": "Quiz feito para as entrevistas",
+      "quantidade_de_perguntas": 6,
+      "perguntas": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    }
+  }
+}
