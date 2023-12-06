@@ -13,10 +13,13 @@ class QuizManager:
         while True:
             try:
                 num_perguntas = int(input("Quantidade de Perguntas: "))
-                break  # Se a conversão for bem-sucedida, saia do loop
+                if num_perguntas > 0:
+                    break  # Se a conversão for bem-sucedida e não for negativo, saia do loop
+                else:
+                    print("Erro: Por favor, digite um número maior que zero.")
             except ValueError:
                 print("Erro: Por favor, digite apenas números.")
-
+                
         perguntas = []
         for _ in range(num_perguntas):
             pergunta_id = int(input("ID da Pergunta: "))
@@ -112,7 +115,7 @@ class QuizManager:
 
     def run(self):
         while True:
-            print("\n--- Menu Quiz ---")
+            print("\n--- Gerenciador de Quiz ---")
             print("1. Criar Quiz")
             print("2. Listar Quizzes")
             print("3. Visualizar Quiz")
