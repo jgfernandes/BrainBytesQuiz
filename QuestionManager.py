@@ -305,7 +305,7 @@ class QuestionManager:
 
     def run(self):
         while True:
-            print("\n--- Menu ---")
+            print("\n--- Gerenciador de perguntas ---")
             print("1. Adicionar Pergunta")
             print("2. Listar Perguntas Ativas")
             print("3. Listar Todas as Perguntas")
