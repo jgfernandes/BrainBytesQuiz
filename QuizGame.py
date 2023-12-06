@@ -1,4 +1,4 @@
-# 1 QuizGame.py
+# QuizGame.py
 
 from DatabaseManager import DatabaseManager
 from QuizManager import QuizManager
@@ -9,12 +9,9 @@ class QuizGame:
         self.db_manager = db_manager
         self.quiz_manager = quiz_manager
         self.question_manager = question_manager
-        self.player_name = None  # Adicionamos um atributo para armazenar o nome do jogador
+        self.player_name = None
 
     def list_quizzes(self):
-        """
-        Lista todos os quizzes disponíveis no banco de dados.
-        """
         quizzes = self.db_manager.list_quizzes()
         if quizzes:
             print("\n--- Quizzes Disponíveis ---")
@@ -24,9 +21,6 @@ class QuizGame:
             print("Nenhum quiz encontrado.")
 
     def play_quiz(self, quiz_id):
-        """
-        Inicia o jogo para um quiz específico.
-        """
         if not self.db_manager.quizzes_table.contains(doc_id=quiz_id):
             print("Quiz não encontrado.")
             return
@@ -45,7 +39,7 @@ class QuizGame:
 
         score = 0
         total_questions = len(questions)
-        answers_summary = []  # Lista para armazenar respostas e feedbacks
+        answers_summary = []
 
         for question_id in questions:
             if not self.db_manager.questions_table.contains(doc_id=question_id):
@@ -74,10 +68,14 @@ class QuizGame:
 
             user_answer_index = ord(user_answer) - ord('A') + 1
             is_correct = user_answer_index in correct_answers
+            feedback = question_data.get('feedback_text', 'Nenhum feedback disponível.')
+
             answers_summary.append({
                 'Título da Questão': question_data['title'],
+                'Opções': {chr(65 + i): option for i, option in enumerate(options)},
                 'Resposta Correta': [chr(64 + ans) for ans in correct_answers],
                 'Resposta Fornecida': user_answer,
+                'Feedback': feedback
             })
 
             if is_correct:
@@ -86,8 +84,13 @@ class QuizGame:
         print(f"\nResumo das Respostas:")
         for index, answer_summary in enumerate(answers_summary, 1):
             print(f"Pergunta {index}:")
-            for key, value in answer_summary.items():
-                print(f"{key}: {value}")
+            print(f"Título: {answer_summary['Título da Questão']}")
+            print("Opções:")
+            for option, text in answer_summary['Opções'].items():
+                print(f"  {option}. {text}")
+            print(f"Resposta Correta: {', '.join(answer_summary['Resposta Correta'])}")
+            print(f"Resposta Fornecida: {answer_summary['Resposta Fornecida']}")
+            print(f"Feedback: {answer_summary['Feedback']}")
             print()
 
         print(f"\n{self.player_name}, você respondeu corretamente a {score} de {total_questions} perguntas.")
@@ -100,7 +103,7 @@ class QuizGame:
 
     def run(self):
         while True:
-            print("\n--- Menu do Jogo Quiz ---")
+            print("\n--- Menu principal Brain Bytes Quiz ---")
             print("1. Listar Quizzes Disponíveis")
             print("2. Jogar um Quiz")
             print("3. Gerenciar Perguntas")
@@ -118,7 +121,11 @@ class QuizGame:
             elif choice == '4':
                 self.manage_quizzes()
             elif choice == '5':
-                break
+                confirm_exit = input("Tem certeza que deseja sair? (Sim/Não): ").strip().lower()
+                if confirm_exit in ['sim', 's']:
+                    break
+                elif confirm_exit in ['nao', 'n']:
+                    continue
             else:
                 print("Opção inválida. Por favor, escolha uma opção válida.")
 
